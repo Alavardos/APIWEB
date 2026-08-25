@@ -13,24 +13,10 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Result>(entity =>
-        {
-            entity.HasKey(r => r.Id);
-            entity.Property(r => r.FileName)
-            .IsRequired();
+        modelBuilder.Entity<Result>()
+            .HasIndex(r => r.FileName);
 
-            entity.HasIndex(r => r.FileName);
-
-            entity.HasMany(r => r.Values)
-            .WithOne(v => v.Result)
-            .HasForeignKey(v => v.ResultId)
-            .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<Value>(entity =>
-        {
-            entity.HasKey(v => v.Id);
-            entity.HasIndex(v => new { v.ResultId, v.Date });
-        });
+        modelBuilder.Entity<Value>()
+            .HasIndex(v => new { v.ResultId, v.Date });
     }
 }
